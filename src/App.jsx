@@ -17,23 +17,22 @@ function App() {
     const fetchData = async () => {
       let long = "";
       let lat = "";
-
+      var forecastEl = document.getElementsByClassName("forecast");
+      
       navigator.geolocation.getCurrentPosition(async function(position) {
 
         long = position.coords.longitude
         lat = position.coords.latitude
+
         fetch(`${import.meta.env.VITE_API_URL}/weather/?lat=${lat}&lon=${long}&units=metric&APPID=${import.meta.env.VITE_API_KEY}`)
-      .then(res => res.json())
-      .then(result => {
-        setData(result);
-        console.log(result)
-      }).catch(error => {
-        console.error("Error fetching weather data:", error);
-      });
+        .then(res => res.json())
+        .then(result => {
+          setData(result);
+        }).catch(error => {
+          console.error("Error fetching weather data:", error);
+        });
         
       });
-
-      console.log({long})
       
     }
     fetchData();
@@ -41,18 +40,16 @@ function App() {
   console.log(data)
 
   return (
-    <div className='h-screen bg-[url("./assets/autumn.jpg")] bg-cover bg-no-repeat p-6'>
-      {/*
-       <div>
-          <Weather weatherDescription = {data.weather ? data.weather[0].main : null} />
-        </div> */}
-      <section className='h-2/4 bg-blue2 rounded-3xl opacity-60 flex'>
+    <div className='h-screen  bg-[url("./assets/summer.jpg")] bg-cover bg-no-repeat p-6'>
       {data ? (
+     <div className='overall h-full w-full'>
+      <section className='h-2/4 bg-blue2 rounded-3xl opacity-60 flex'>
+     
         
           <section className='flex w-full'>
             <div className='w-2/4 p-2'>
               <h2> {data.name}</h2>
-              <img src={sunCloudy} className='h-32 w-32 translate-x-72'/>
+              <img src={sunny} className='h-32 w-32 translate-x-72'/>
               <p className='text-4xl'>{data.main.temp}°C</p>
               <p> {data.weather[0].description}</p>
             </div>
@@ -65,23 +62,30 @@ function App() {
               <div>rain <br/> %</div>
             </div>
           </section>
+          
            
-      ) : (
-        <p>Loading weather data...</p>
-      )}
+      
       </section>
       <section className='h-2/4 pt-3'>
         <div className='flex justify-between'>
         <h1 className='font-bold text-left'>Weekly</h1>
-        <form className='rounded-2xl bg-blue3 h-10'>
-          <input className='bg-none' placeholder='search location'/>
+        <form className=' h-10'>
+          <input className='bg-none bg-blue3 rounded-2xl opacity-60' placeholder='search location'/>
+
         </form>
         </div>
         <section className='flex h-60 p-4'>
-        <div className='bg-blue3 h-full w-36 rounded-3xl opacity-60'></div>
+          <div className='bg-blue3 h-full w-36 rounded-3xl opacity-60 grid'>
+            <section>{new Date(data.dt * 1000).toLocaleDateString()}</section>
+            <section></section>
+            <section>{data.main.temp}°C</section>
+          </div>
         </section>
       </section>
-      
+      </div>
+      ) : (
+        <p>Loading weather data...</p>
+      )}
     </div>
   )
 }
